@@ -1,7 +1,10 @@
 //Creating sprite using sprite sheets for animation
 const TILE_SIZE = 70;
-const CANVAS_WIDTH = TILE_SIZE * 9;
-const CANVAS_HEIGHT = TILE_SIZE * 6;
+const TOTAL_COLUMNS = 9;
+const TOTAL_ROWS = 6;
+const CANVAS_WIDTH = TILE_SIZE * TOTAL_COLUMNS;
+const CANVAS_HEIGHT = TILE_SIZE * TOTAL_ROWS;
+
 let tile_sprite_sheet;
 
 
@@ -22,16 +25,24 @@ function draw() {
   background(0);
 
   // Draw the ground tiles
-  for (var x = 0; x < CANVAS_WIDTH; x += TILE_SIZE) {
-    tile_sprite_sheet.drawFrame('snow.png', x, CANVAS_HEIGHT - TILE_SIZE);
+  for (var x = 0; x < TOTAL_COLUMNS; x++) {
+    drawTile('snow.png', x, TOTAL_ROWS - 1)
   }
 
   // Draw the sign tiles
-  tile_sprite_sheet.drawFrame('signExit.png', CANVAS_WIDTH - TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 2);
-  tile_sprite_sheet.drawFrame('signRight.png', 0, CANVAS_HEIGHT - TILE_SIZE * 2);
-
-
+  drawTile('signRight.png', 0, TOTAL_ROWS - 2);
+  drawTile('signExit.png', 0, 0);
+  
   //draw some more stuff
-  tile_sprite_sheet.drawFrame('boxCoin.png', TILE_SIZE, TILE_SIZE);
-  tile_sprite_sheet.drawFrame('boxCoinAlt.png', TILE_SIZE * 2, TILE_SIZE);
+  drawTile('dirtCliffLeft.png', 1, 1);
+  drawTile('dirtCliffRight.png', 2, 1);
+  // drawTile('boxCoinAlt.png', 3, 1);
+  drawTile('boxCoinAlt.png', 4, 1);
+
+  drawTile('grassCliffLeft.png', 4, 3);
+  drawTile('grassCliffRight.png', 5, 3);
+}
+
+function drawTile(tilename, gridX, gridY){
+    tile_sprite_sheet.drawFrame(tilename, TILE_SIZE * gridX, TILE_SIZE * gridY);
 }
