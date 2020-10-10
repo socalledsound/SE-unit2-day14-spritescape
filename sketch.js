@@ -5,6 +5,18 @@ const TOTAL_ROWS = 6;
 const CANVAS_WIDTH = TILE_SIZE * TOTAL_COLUMNS;
 const CANVAS_HEIGHT = TILE_SIZE * TOTAL_ROWS;
 
+const rows = Array.from({length: TOTAL_ROWS});
+rows.forEach((row, i) => {
+  rows[i] = Array.from({ length: TOTAL_COLUMNS}, e => null);
+})
+
+
+console.log(rows);
+
+
+
+
+
 let tile_sprite_sheet;
 
 
@@ -18,21 +30,18 @@ function preload() {
 
 function setup() {
   createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-}
-
-function draw() {
-  clear();
   background(0);
-
   // Draw the ground tiles
   for (var x = 0; x < TOTAL_COLUMNS; x++) {
-    drawTile('snow.png', x, TOTAL_ROWS - 1)
+    drawTile('snow.png', x, TOTAL_ROWS - 1);
+    rows[TOTAL_ROWS - 1][x] = 'snow.png';
   }
 
   // Draw the sign tiles
   drawTile('signRight.png', 0, TOTAL_ROWS - 2);
+  rows[0][TOTAL_ROWS - 2] = 'signRight.png';
   drawTile('signExit.png', 0, 0);
-  
+  rows[0][0] = 'signExit.png';
   //draw some more stuff
   drawTile('dirtCliffLeft.png', 1, 1);
   drawTile('dirtCliffRight.png', 2, 1);
@@ -41,6 +50,15 @@ function draw() {
 
   drawTile('grassCliffLeft.png', 4, 3);
   drawTile('grassCliffRight.png', 5, 3);
+  
+  console.log(rows);
+}
+
+function draw() {
+  // clear();
+  background(0);
+  drawLevel();
+
 }
 
 function drawTile(tilename, gridX, gridY){
