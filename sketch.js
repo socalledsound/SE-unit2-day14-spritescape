@@ -36,20 +36,17 @@ let mouse_moved = false;
 let touch_started = false;
 let eventX;
 let jumping = false;
-let tile_sprites;
-let snowImage;
-let landscape;
+let landscape, backgroundSprites;
 
 function preload() {
   // Load the json for the tiles sprite sheet
 
-  tiledata = loadJSON('tiles.json');
-  tile_sprite_sheet = loadSpriteSheet('tiles_spritesheet.png', tiledata);
-  // loadJSON('tiles.json', function(tile_frames) {
-  //   // Load tiles sprite sheet from frames array once frames array is ready
-    
-  // });
+  loadJSON('tiles.json', function(tile_frames) {
+    // Load tiles sprite sheet from frames array once frames array is ready
+    tile_sprite_sheet = loadSpriteSheet('tiles_spritesheet.png', tile_frames);
+  });
 
+  tiledata = loadJSON('tile-data.json');
    tile_sprites = loadImage('tiles_spritesheet.png');
 
   player_sprite_sheet = loadSpriteSheet('player_spritesheet.png', player_frames);
@@ -67,10 +64,11 @@ function preload() {
 
 function setup() {
   createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-  background(0);
+
 
 
   landscape = new Group();
+  backgroundSprites = new Group();
   // Create the Player sprite and add it's animations
   player_sprite = createSprite(140, 300, 40, 10);
   player_sprite.addAnimation('walk', player_walk);
@@ -82,78 +80,54 @@ function setup() {
 
   // Draw the ground tiles
   for (var x = 0; x < TOTAL_COLUMNS; x++) {
-    // drawTile('snow.png', x, TOTAL_ROWS - 1);
-    setCollider('snow.png', x, TOTAL_ROWS - 1)
-    // rows[TOTAL_ROWS - 1][x] = 'snow.png';
+    addLandscapeCollider('snow.png', x, TOTAL_ROWS - 1);
   }
 
   // Draw the sign tiles
-    //setCollider('signRight.png', 0, TOTAL_ROWS - 2);
-    drawTile('signRight.png', 0, TOTAL_ROWS - 2);
-  // rows[TOTAL_ROWS - 2][0] = 'signRight.png';
-  //setCollider('signExit.png', 0,0);
-  // drawTile('signExit.png', 0, 0);
-  // rows[0][0] = 'signExit.png';
+   addBackgroundSprite('signRight.png', 0, TOTAL_ROWS - 2);
+  addBackgroundSprite('signExit.png', 0, 0);
+
   
 
 
   //draw some more stuff
- // setCollider(dirtCliffLeftImage, 1, 1);
- // drawTile('dirtCliffLeft.png', 1, 1);
-  // rows[1][1] = 'dirtCliffLeft.png';
-  //setCollider(dirtCliffRightImage, 2, 2);
-  //drawTile('dirtCliffRight.png', 2, 1);
-  // rows[1][2] = 'dirtCliffRight.png';
-
-  // drawTile('boxCoinAlt.png', 3, 1);
-  // drawTile('boxCoinAlt.png', 4, 1);
-  // rows[1][4] = 'boxCoinAlt.png';
-  //setCollider(grassCliffLeftImage, 4, 3);
- // drawTile('grassCliffLeft.png', 4, 3);
-  // rows[3][4] = 'grassCliffLeft.png';
-  //setCollider(grassCliffRightImage, 5, 3);
-  //drawTile('grassCliffRight.png', 5, 3);
-  // rows[3][5] = 'grassCliffRight.png';
-
-//   console.log(rows);
-// console.log(landscape);
+  addLandscapeCollider('dirtCliffLeft.png', 1, 2);
+  addLandscapeCollider('dirtCliffRight.png', 2, 2);
+  addLandscapeCollider('grassCliffLeft.png', 4, 4);
+  addLandscapeCollider('grassCliffRight.png', 5, 4);
  
-
 }
 
 function draw() { 
   clear();
   background(0);
-
-  drawLevel();
+  drawSprites(backgroundSprites);
   drawSprites(landscape);
   touchScreen();
   gravity();
   movePlayer();
   player_sprite.collide(landscape);
   drawSprites();
-  drawSprites(landscape);
+
 
 
 }
 
-function drawTile(tilename, gridX, gridY){
-    tile_sprite_sheet.drawFrame(tilename, TILE_SIZE * gridX, TILE_SIZE * gridY);
-  //  const thisAnimation = loadAnimation( new SpriteSheet('tile_spritesheet.png',
-  //  [{'name': tilename}]));
-    rows[gridY][gridX] = {tilename, gridX, gridY};
-}
-
-function setCollider(tilename, gridX, gridY){
-
+function addBackgroundSprite(tilename, gridX, gridY){
   const image = getImage(tilename);
-
   const offset = TILE_SIZE/2;
-  let newSnow = createSprite(TILE_SIZE * gridX + offset, TILE_SIZE * gridY + offset);
-  newSnow.addImage(image); 
-  // newSnow.setCollider('rectangle', TILE_SIZE * gridX, TILE_SIZE * gridY, TILE_SIZE, TILE_SIZE);
-  landscape.add(newSnow);
-  
+  let newSprite = createSprite(TILE_SIZE * gridX + offset, TILE_SIZE * gridY + offset);
+  newSprite.addImage(image); 
+  backgroundSprites.add(newSprite);
+}
+
+
+function addLandscapeCollider(tilename, gridX, gridY){
+  const image = getImage(tilename);
+  const offset = TILE_SIZE/2;
+  let newSprite = createSprite(TILE_SIZE * gridX + offset, TILE_SIZE * gridY + offset);
+  newSprite.addImage(image); 
+  landscape.add(newSprite);
 }
 
 
